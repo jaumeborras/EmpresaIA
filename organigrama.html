@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organigrama — Empresa de Jaime con Agentes IA</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #0f0c29 100%);
+    min-height: 100vh;
+    color: #fff;
+    padding: 2rem 1rem;
+  }
+
+
+  /* LOGIN */
+  #loginScreen {
+    position: fixed; inset: 0; z-index: 999;
+    background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #0f0c29 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .login-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 20px; padding: 2.5rem 2.5rem 2rem;
+    width: 100%; max-width: 380px;
+    box-shadow: 0 0 60px rgba(108,99,255,0.25);
+    animation: fadeInUp 0.5s ease;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .login-logo { text-align: center; margin-bottom: 1.8rem; }
+  .login-logo .icon { font-size: 2.2rem; display: block; margin-bottom: 0.5rem; }
+  .login-logo h2 {
+    font-size: 1.1rem; font-weight: 700;
+    background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; line-height: 1.3;
+  }
+  .login-logo p { font-size: 0.65rem; color: rgba(255,255,255,0.3); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.3rem; }
+  .login-field { margin-bottom: 1rem; }
+  .login-field label { display: block; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.4rem; }
+  .login-field input {
+    width: 100%; padding: 0.75rem 1rem;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px; color: #fff; font-size: 0.9rem; font-family: inherit; outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .login-field input:focus { border-color: #a78bfa; background: rgba(167,139,250,0.1); }
+  .login-field input::placeholder { color: rgba(255,255,255,0.2); }
+  .login-btn {
+    width: 100%; padding: 0.85rem;
+    background: linear-gradient(135deg, #6C63FF, #a78bfa);
+    border: none; border-radius: 10px; color: #fff;
+    font-size: 0.85rem; font-weight: 600; font-family: inherit;
+    cursor: pointer; margin-top: 0.5rem;
+    transition: opacity 0.2s, transform 0.1s; letter-spacing: 0.05em;
+  }
+  .login-btn:hover { opacity: 0.9; }
+  .login-btn:active { transform: scale(0.98); }
+  .login-error {
+    margin-top: 0.8rem; padding: 0.6rem 0.9rem;
+    background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 8px; font-size: 0.75rem; color: #fca5a5;
+    text-align: center; display: none;
+  }
+  .login-error.show { display: block; animation: shake 0.3s ease; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  #mainContent { display: none; }
+
+  /* HEADER */
+  .header { text-align: center; margin-bottom: 2rem; }
+  .header .eyebrow {
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: #a78bfa; margin-bottom: 0.4rem;
+  }
+  .header h1 {
+    font-size: clamp(1.4rem, 3.5vw, 2.2rem); font-weight: 700;
+    background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header .meta {
+    color: rgba(255,255,255,0.35); font-size: 0.75rem; margin-top: 0.4rem;
+  }
+  .badge {
+    display: inline-block; margin-left: 0.8rem;
+    background: rgba(167,139,250,0.2); border: 1px solid rgba(167,139,250,0.4);
+    border-radius: 20px; padding: 2px 10px; font-size: 0.65rem; color: #a78bfa;
+  }
+
+  /* ROOT NODE */
+  .root-wrap { display: flex; justify-content: center; margin-bottom: 0; }
+  .root-node {
+    background: linear-gradient(135deg, #6C63FF, #a78bfa);
+    border-radius: 16px; padding: 0.9rem 2.5rem; text-align: center;
+    box-shadow: 0 0 40px rgba(108,99,255,0.5);
+  }
+  .root-node .icon { font-size: 1.4rem; }
+  .root-node .title { font-weight: 700; font-size: 0.95rem; margin-top: 0.2rem; }
+  .root-node .subtitle { font-size: 0.65rem; opacity: 0.75; margin-top: 0.2rem; }
+
+  /* CONNECTOR */
+  .connector { display: flex; justify-content: center; }
+  .connector-line { width: 2px; height: 28px; background: rgba(167,139,250,0.4); }
+  .h-line {
+    position: absolute; top: 0; left: 5%; right: 5%;
+    height: 2px; background: rgba(167,139,250,0.2);
+  }
+
+  /* GRID */
+  .grid-wrap { max-width: 1400px; margin: 0 auto; position: relative; }
+  .dept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.2rem;
+    padding-top: 28px;
+  }
+
+  /* DEPT CARD */
+  .dept-col { display: flex; flex-direction: column; align-items: center; }
+  .dept-vline { width: 2px; height: 28px; }
+  .dept-card {
+    width: 100%; border-radius: 14px; padding: 1rem;
+    cursor: pointer; position: relative; overflow: hidden;
+    transition: box-shadow 0.3s, border-color 0.3s, background 0.3s;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+  }
+  .dept-card:hover { filter: brightness(1.08); }
+  .dept-card.open { }
+  .dept-topbar { position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 14px 14px 0 0; }
+  .new-badge {
+    position: absolute; top: 10px; right: 10px;
+    border-radius: 20px; padding: 1px 7px;
+    font-size: 0.55rem; font-weight: 700; color: #fff;
+  }
+  .dept-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+  .dept-emoji { font-size: 1.3rem; }
+  .dept-info { flex: 1; }
+  .dept-name { font-weight: 700; font-size: 0.85rem; }
+  .dept-count { font-size: 0.62rem; margin-top: 1px; }
+  .chevron { font-size: 0.75rem; opacity: 0.5; transition: transform 0.3s; display: inline-block; }
+  .chevron.open { transform: rotate(180deg); }
+
+  /* PILLS (collapsed) */
+  .pills { display: flex; flex-wrap: wrap; gap: 4px; }
+  .pill {
+    font-size: 0.58rem; padding: 2px 7px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.65);
+    background: rgba(255,255,255,0.07);
+  }
+  .pill.new { color: #fff; font-weight: 600; }
+  .pill.more { color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.04); }
+
+  /* AGENT LIST (expanded) */
+  .agent-list { display: flex; flex-direction: column; gap: 3px; margin-top: 0.4rem; }
+  .agent-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 8px; border-radius: 8px;
+    border: 1px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+    cursor: default;
+  }
+  .agent-item:hover { }
+  .agent-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .agent-name { font-size: 0.7rem; color: rgba(255,255,255,0.82); }
+  .agent-name.new { color: #fff; font-weight: 600; }
+
+  /* NEW ROLES SUMMARY */
+  .new-roles {
+    max-width: 1400px; margin: 2rem auto 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .new-role-card {
+    border-radius: 12px; padding: 1rem;
+    display: flex; gap: 0.8rem; align-items: flex-start;
+  }
+  .new-role-card .role-emoji { font-size: 1.5rem; flex-shrink: 0; }
+  .new-role-card .role-title { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem; }
+  .new-role-card .role-name { font-weight: 700; font-size: 0.85rem; }
+  .new-role-card .role-badge { border-radius: 20px; padding: 1px 7px; font-size: 0.55rem; font-weight: 700; color: #fff; }
+  .new-role-card .role-dept { font-size: 0.62rem; margin-bottom: 0.3rem; }
+  .new-role-card .role-desc { font-size: 0.7rem; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+  /* COLLAB RULES */
+  .collab-wrap {
+    max-width: 1400px; margin: 1.2rem auto 0;
+    padding: 1rem 1.2rem;
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px; border: 1px solid rgba(255,255,255,0.07);
+  }
+  .collab-title {
+    font-size: 0.6rem; color: rgba(255,255,255,0.3);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    text-align: center; margin-bottom: 0.8rem;
+  }
+  .collab-grid {
+    display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center;
+  }
+  .collab-item { display: flex; align-items: center; gap: 5px; }
+  .collab-icons { font-size: 0.8rem; }
+  .collab-label { font-size: 0.62rem; color: rgba(255,255,255,0.45); }
+
+  /* FOOTER */
+  .footer { text-align: center; margin-top: 1rem; font-size: 0.6rem; color: rgba(255,255,255,0.18); }
+
+  @media (max-width: 600px) {
+    .dept-grid { grid-template-columns: 1fr 1fr; }
+    .new-roles { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <span class="icon">🤖</span>
+      <h2>Empresa de Jaime<br>con Agentes IA</h2>
+      <p>Acceso restringido</p>
+    </div>
+    <div class="login-field">
+      <label>Usuario</label>
+      <input type="text" id="loginUser" placeholder="Introduce tu usuario" autocomplete="off" />
+    </div>
+    <div class="login-field">
+      <label>Contraseña</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="off" />
+    </div>
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="loginError">Usuario o contraseña incorrectos</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="mainContent">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="eyebrow">Sistema Operativo · v1.6</div>
+  <h1>Empresa de Jaime con Agentes IA</h1>
+  <p class="meta">
+    10 departamentos · 51 agentes
+    <span class="badge">v1.6 · 10/03/2026</span>
+  </p>
+</div>
+
+<!-- ROOT NODE -->
+<div class="root-wrap">
+  <div class="root-node">
+    <div class="icon">🤖</div>
+    <div class="title">Sistema Operativo Central</div>
+    <div class="subtitle">Selección automática · Colaboración entre departamentos</div>
+  </div>
+</div>
+
+<!-- VERTICAL CONNECTOR -->
+<div class="connector"><div class="connector-line"></div></div>
+
+<!-- DEPARTMENTS -->
+<div class="grid-wrap">
+  <div class="h-line"></div>
+  <div class="dept-grid" id="deptGrid"></div>
+</div>
+
+<!-- NEW ROLES -->
+<div class="new-roles" id="newRoles"></div>
+
+<!-- COLLABORATION RULES -->
+<div class="collab-wrap">
+  <div class="collab-title">15 Reglas de Colaboración</div>
+  <div class="collab-grid" id="collabGrid"></div>
+</div>
+
+<div class="footer">Haz clic en un departamento para ver todos sus agentes</div>
+
+<script>
+const DEPTS = [
+  { id:"diseno",   name:"Diseño",                emoji:"🎨", color:"#6C63FF",
+    agents:["Brand Guardian","Image Prompt Engineer","Inclusive Visuals Specialist","UI Designer","UX Architect","UX Researcher","Visual Storyteller","Whimsy Injector"] },
+  { id:"ing",      name:"Ingeniería",             emoji:"⚙️", color:"#0EA5E9",
+    agents:["AI Engineer","Autonomous Optimization Architect","Backend Architect","Data Engineer","DevOps Automator","Frontend Developer","Mobile App Builder","Rapid Prototyper","Security Engineer","Senior Developer","Technical Writer"] },
+  { id:"mkt",      name:"Marketing",              emoji:"📣", color:"#F59E0B",
+    agents:["App Store Optimizer","Content Creator","Growth Hacker","Instagram Curator","Reddit Community Builder","Search Growth Strategist ✦","Social Media Strategist","TikTok Strategist","Twitter Engager","WeChat Official Account Manager","Xiaohongshu Specialist","Zhihu Strategist"] },
+  { id:"prod",     name:"Producto",               emoji:"🚀", color:"#10B981",
+    agents:["Behavioral Nudge Engine","Feedback Synthesizer","Sprint Prioritizer","Trend Researcher"] },
+  { id:"pm",       name:"Project Management",     emoji:"📋", color:"#EC4899",
+    agents:["Experiment Tracker","Project Shepherd","Senior Project Manager","Studio Operations","Studio Producer"] },
+  { id:"xr",       name:"Desarrolladores XR",     emoji:"🥽", color:"#8B5CF6",
+    agents:["XR Cockpit Interaction Specialist","XR Immersive Developer","XR Interface Architect"] },
+  { id:"esp",      name:"Especialistas",          emoji:"🧠", color:"#EF4444",
+    agents:["Meta-Learning Agent ✦","Agentic Identity & Trust Architect","Agents Orchestrator","Cultural Intelligence Strategist","Data Analytics Reporter","Data Consolidation Agent","Developer Advocate","LSP/Index Engineer","Report Distribution Agent","Sales Data Extraction Agent"] },
+  { id:"sop",      name:"Soporte",                emoji:"🛡️", color:"#14B8A6",
+    agents:["Analytics Reporter","Executive Summary Generator","Finance Tracker","Infrastructure Maintainer","Legal Compliance Checker","Support Responder"] },
+  { id:"test",     name:"Testers",                emoji:"🧪", color:"#F97316",
+    agents:["Accessibility Auditor","API Tester","Evidence Collector","Performance Benchmarker","Reality Checker","Test Results Analyzer","Tool Evaluator","Workflow Optimizer"] },
+  { id:"ventas",   name:"Ventas",                 emoji:"💰", color:"#22C55E", isNew: true,
+    agents:["Revenue Closer ✦"] },
+];
+
+const NEW_ROLES = [
+  { emoji:"💰", name:"Revenue Closer",            dept:"Ventas (nuevo dpto.)", color:"#22C55E", desc:"Convierte leads en clientes. Pipeline, CRM, cierre de deals y forecast de ingresos." },
+  { emoji:"🔍", name:"Search Growth Strategist",  dept:"Marketing",            color:"#F59E0B", desc:"SEO técnico + Google Ads. Tráfico orgánico y paid search orientado a revenue." },
+  { emoji:"🔁", name:"Meta-Learning Agent",        dept:"Especialistas",        color:"#EF4444", desc:"Motor de auto-mejora del sistema. Detecta fallos, evalúa agentes y evoluciona el OS." },
+];
+
+const COLLAB = [
+  ["🎨+⚙️","Interfaces digitales"],
+  ["🚀+⚙️","Funcionalidades"],
+  ["📣+🎨","Campañas visuales"],
+  ["⚙️+🛡️","Estabilidad y seguridad"],
+  ["🧪+todos","Validación final"],
+  ["💰+📣","Leads y nurturing"],
+  ["💰+🚀","Feedback de mercado"],
+  ["💰+🛡️","Escalado de incidencias"],
+  ["🥽+🎨","Experiencias inmersivas"],
+  ["🥽+⚙️","Integración técnica XR"],
+  ["🥽+🧪","Validación XR"],
+  ["📋+todos","Coordinación de proyectos"],
+  ["🧠+todos","Orquestación del sistema"],
+  ["🚀+🎨","Research → Producto"],
+  ["🔁+todos","Mejora continua del OS"],
+];
+
+const expanded = {};
+
+function renderDepts() {
+  const grid = document.getElementById('deptGrid');
+  grid.innerHTML = '';
+  DEPTS.forEach(dept => {
+    const isOpen = !!expanded[dept.id];
+    const isNew = !!dept.isNew;
+
+    const col = document.createElement('div');
+    col.className = 'dept-col';
+
+    // vertical line
+    const vline = document.createElement('div');
+    vline.className = 'dept-vline';
+    vline.style.background = dept.color + '55';
+    col.appendChild(vline);
+
+    // card
+    const card = document.createElement('div');
+    card.className = 'dept-card' + (isOpen ? ' open' : '');
+    card.style.borderColor = isOpen ? dept.color : (isNew ? dept.color + '66' : 'rgba(255,255,255,0.1)');
+    card.style.background = isOpen
+      ? `linear-gradient(135deg, ${dept.color}28, ${dept.color}12)`
+      : isNew ? `linear-gradient(135deg, ${dept.color}18, ${dept.color}08)` : 'rgba(255,255,255,0.05)';
+    card.style.boxShadow = isOpen ? `0 0 24px ${dept.color}40` : isNew ? `0 0 14px ${dept.color}25` : 'none';
+
+    // top bar
+    const bar = document.createElement('div');
+    bar.className = 'dept-topbar';
+    bar.style.background = dept.color;
+    card.appendChild(bar);
+
+    // new badge
+    if (isNew) {
+      const nb = document.createElement('div');
+      nb.className = 'new-badge';
+      nb.style.background = dept.color;
+      nb.textContent = 'NUEVO';
+      card.appendChild(nb);
+    }
+
+    // head
+    const head = document.createElement('div');
+    head.className = 'dept-head';
+    head.innerHTML = `
+      <span class="dept-emoji">${dept.emoji}</span>
+      <div class="dept-info">
+        <div class="dept-name">${dept.name}</div>
+        <div class="dept-count" style="color:${dept.color}">${dept.agents.length} agente${dept.agents.length > 1 ? 's' : ''}</div>
+      </div>
+      <span class="chevron ${isOpen ? 'open' : ''}">▾</span>
+    `;
+    card.appendChild(head);
+
+    if (!isOpen) {
+      // pills
+      const pills = document.createElement('div');
+      pills.className = 'pills';
+      dept.agents.slice(0, 3).forEach(a => {
+        const p = document.createElement('span');
+        p.className = 'pill' + (a.includes('✦') ? ' new' : '');
+        p.style.background = a.includes('✦') ? dept.color + '35' : dept.color + '20';
+        p.style.borderColor = a.includes('✦') ? dept.color + '70' : dept.color + '40';
+        p.textContent = a;
+        pills.appendChild(p);
+      });
+      if (dept.agents.length > 3) {
+        const more = document.createElement('span');
+        more.className = 'pill more';
+        more.textContent = `+${dept.agents.length - 3} más`;
+        pills.appendChild(more);
+      }
+      card.appendChild(pills);
+    } else {
+      // agent list
+      const list = document.createElement('div');
+      list.className = 'agent-list';
+      dept.agents.forEach(a => {
+        const item = document.createElement('div');
+        item.className = 'agent-item';
+        item.style.background = a.includes('✦') ? dept.color + '12' : 'rgba(255,255,255,0.03)';
+        item.style.borderColor = a.includes('✦') ? dept.color + '40' : 'transparent';
+        item.onmouseenter = () => { item.style.background = dept.color + '25'; item.style.borderColor = dept.color + '55'; };
+        item.onmouseleave = () => { item.style.background = a.includes('✦') ? dept.color + '12' : 'rgba(255,255,255,0.03)'; item.style.borderColor = a.includes('✦') ? dept.color + '40' : 'transparent'; };
+        item.innerHTML = `<div class="agent-dot" style="background:${dept.color}"></div><span class="agent-name ${a.includes('✦') ? 'new' : ''}">${a}</span>`;
+        list.appendChild(item);
+      });
+      card.appendChild(list);
+    }
+
+    card.onclick = () => {
+      expanded[dept.id] = !expanded[dept.id];
+      renderDepts();
+    };
+
+    col.appendChild(card);
+    grid.appendChild(col);
+  });
+}
+
+function renderNewRoles() {
+  const wrap = document.getElementById('newRoles');
+  wrap.innerHTML = '';
+  NEW_ROLES.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'new-role-card';
+    card.style.background = r.color + '12';
+    card.style.border = `1px solid ${r.color}40`;
+    card.innerHTML = `
+      <span class="role-emoji">${r.emoji}</span>
+      <div>
+        <div class="role-title">
+          <span class="role-name">${r.name}</span>
+          <span class="role-badge" style="background:${r.color}">NUEVO</span>
+        </div>
+        <div class="role-dept" style="color:${r.color}">${r.dept}</div>
+        <div class="role-desc">${r.desc}</div>
+      </div>`;
+    wrap.appendChild(card);
+  });
+}
+
+function renderCollab() {
+  const grid = document.getElementById('collabGrid');
+  grid.innerHTML = '';
+  COLLAB.forEach(([icons, label]) => {
+    const item = document.createElement('div');
+    item.className = 'collab-item';
+    item.innerHTML = `<span class="collab-icons">${icons}</span><span class="collab-label">→ ${label}</span>`;
+    grid.appendChild(item);
+  });
+}
+
+// Render is called after login
+
+
+  function doLogin() {
+    const user = document.getElementById('loginUser').value.trim().toLowerCase();
+    const pass = document.getElementById('loginPass').value.trim();
+    const err  = document.getElementById('loginError');
+    const validUser = ['j','b','o','r','r','a','s','g'].join('');
+    const validPass = [1,2,3,4].join('');
+    if (user === validUser && pass === validPass) {
+      const screen = document.getElementById('loginScreen');
+      screen.style.transition = 'opacity 0.4s ease';
+      screen.style.opacity = '0';
+      setTimeout(() => {
+        screen.style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        renderDepts();
+        renderNewRoles();
+        renderCollab();
+      }, 400);
+    } else {
+      err.classList.remove('show');
+      void err.offsetWidth; // reflow for animation replay
+      err.classList.add('show');
+      document.getElementById('loginPass').value = '';
+      document.getElementById('loginPass').focus();
+    }
+  }
+
+  // Allow Enter key to submit
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLogin();
+  });
+
+</script>
+
+</div><!-- /mainContent -->
+</body>
+</html>
